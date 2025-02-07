@@ -1,0 +1,44 @@
+research_task:
+  description: >
+    Conduct a thorough research on space resource management, focusing on cutting-edge developments 
+    such as innovations in satellite scheduling, ground station optimization, and AI-driven resource allocation.
+    Make sure to find interesting and relevant information considering current trends, challenges, and opportunities in this domain.
+  expected_output: >
+    A list of 10 bullet points highlighting the most relevant and recent innovations in space resource management.
+  agent: researcher
+
+reporting_task:
+  description: >
+    Review the research findings on space resource management and expand each key topic into a detailed section for a comprehensive report.
+    Ensure the report covers challenges, trends, and potential optimization strategies, with clear actionable insights for decision-makers.
+  expected_output: >
+    A fully detailed report formatted in markdown (without using '```') that includes full sections on each major topic in space resource management.
+  agent: reporting_analyst
+
+optimization_task:
+  description: >
+    Analyze the available research and operational data on space resource management to develop, 
+    refine, and autonomously apply self-optimising strategies for dynamic resource allocation, 
+    scheduling, and logistics planning. The agent will actively use advanced algorithms and decision rules to manage resources, 
+    continuously adjusting its strategies based on real-time feedback and historical data.
+  expected_output: >
+    A set of actionable optimization recommendations and decision rules, formatted as bullet points, that detail potential trade-offs and improvements in managing critical space assets.
+    The output should include evidence of the agent autonomously applying algorithms to manage resources, with a focus on real-time adjustments and long-term optimisation.
+  agent: optimization_specialist
+
+mission_integration_task:
+  description: >
+    Analyze current mission objectives and operational timelines to determine how resource allocation (fuel, power, oxygen, etc) 
+    should be dynamically adjusted to support evolving mission plans.
+    Provide a summary of integration strategies that ensure alignment between mission goals and resource management.
+  expected_output: >
+    A detailed summary with recommendations and strategies for aligning resource allocation with mission-critical objectives, formatted as bullet points.
+  agent: mission_integration_strategist
+
+anomaly_contingency_task:
+  description: >
+    Monitor simulated or historical resource usage data to detect anomalies or unexpected resource drains.
+    Develop a set of contingency plans that can be triggered automatically when such anomalies are detected.
+  expected_output: >
+    A list of contingency recommendations and decision rules formatted as bullet points, detailing corrective actions and fallback strategies for resource management.
+  agent: anomaly_contingency_manager
