@@ -15,16 +15,14 @@ reporting_task:
     A fully detailed report formatted in markdown (without using '```') that includes full sections on each major topic in space resource management.
   agent: reporting_analyst
 
-optimization_task:
+resource_management_task:
   description: >
-    Analyze the available research and operational data on space resource management to develop, 
-    refine, and autonomously apply self-optimising strategies for dynamic resource allocation, 
-    scheduling, and logistics planning. The agent will actively use advanced algorithms and decision rules to manage resources, 
-    continuously adjusting its strategies based on real-time feedback and historical data.
+    Analyze available research and operational data on space resource management to develop, refine, and autonomously apply advanced, self-optimising, and predictive strategies for dynamic resource allocation, scheduling, and logistics planning.
+    The agent will actively fetch and analyze real-time resource data—including current resource status and consumption metrics from ongoing and past missions—and use advanced algorithms to forecast and adjust resource distribution (such as power, fuel, oxygen, etc.) to meet upcoming mission demands.  # Updated: Added predictive and forecasting elements.
   expected_output: >
-    A set of actionable optimization recommendations and decision rules, formatted as bullet points, that detail potential trade-offs and improvements in managing critical space assets.
-    The output should include evidence of the agent autonomously applying algorithms to manage resources, with a focus on real-time adjustments and long-term optimisation.
-  agent: optimization_specialist
+    A comprehensive set of actionable optimization recommendations, decision rules, and predictive models, formatted as bullet points, that detail potential trade-offs and improvements in managing critical space assets.
+    The output should provide evidence of the agent autonomously applying algorithms to fetch, analyze, predict, and adjust resource management strategies in real time.
+  agent: resource_management_specialist
 
 mission_integration_task:
   description: >

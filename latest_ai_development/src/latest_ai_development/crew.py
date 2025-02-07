@@ -31,9 +31,9 @@ class LatestAiDevelopment():
     # Agent for the optimization specialist role
     @agent
     # Added: optimization_specialist agent
-    def optimization_specialist(self) -> Agent:
+    def resource_management_specialist(self) -> Agent:
         return Agent(
-            config=self.agents_config['optimization_specialist'],
+            config=self.agents_config['resource_management_specialist'],
             verbose=True
         )
 
@@ -70,9 +70,9 @@ class LatestAiDevelopment():
 
     # New task for optimization analysis
     @task
-    def optimization_task(self) -> Task:  # Added: optimization task
+    def resource_management_task(self) -> Task:  # Added: optimization task
         return Task(
-            config=self.tasks_config['optimization_task'],
+            config=self.tasks_config['resource_management_task'],
         )
 
     # Task for mission integration strategy
