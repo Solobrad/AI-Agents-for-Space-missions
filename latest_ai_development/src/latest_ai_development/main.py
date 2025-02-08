@@ -13,17 +13,20 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 # Replace with inputs you want to test with, it will automatically
 # interpolate any tasks and agents information
 
-def run():
+
+def run(inputs=None):  # <-- Modified to accept an optional inputs parameter
     """
     Run the crew.
     """
-    inputs = {
-        'topic': 'AI LLMs',
-        'current_year': str(datetime.now().year)
-    }
-    
+    # Use the provided inputs or default values.
+    if inputs is None:
+        inputs = {
+            'topic': 'AI LLMs',
+            'current_year': str(datetime.now().year)
+        }
     try:
-        LatestAiDevelopment().crew().kickoff(inputs=inputs)
+        result = LatestAiDevelopment().crew().kickoff(inputs=inputs)
+        return result  # Return the result for the UI to display.
     except Exception as e:
         raise Exception(f"An error occurred while running the crew: {e}")
 
@@ -36,10 +39,12 @@ def train():
         "topic": "AI LLMs"
     }
     try:
-        LatestAiDevelopment().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
+        LatestAiDevelopment().crew().train(n_iterations=int(
+            sys.argv[1]), filename=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while training the crew: {e}")
+
 
 def replay():
     """
@@ -51,6 +56,7 @@ def replay():
     except Exception as e:
         raise Exception(f"An error occurred while replaying the crew: {e}")
 
+
 def test():
     """
     Test the crew execution and returns the results.
@@ -59,7 +65,8 @@ def test():
         "topic": "AI LLMs"
     }
     try:
-        LatestAiDevelopment().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
+        LatestAiDevelopment().crew().test(n_iterations=int(
+            sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)
 
     except Exception as e:
         raise Exception(f"An error occurred while testing the crew: {e}")
