@@ -1,0 +1,40 @@
+{
+    "resources": [
+      {
+        "resource_id": "1",
+        "resource_name": "Water",
+        "current_level": 20000,
+        "current_consumption_rate": 150,
+        "historical_consumption_avg": 145
+      },
+      {
+        "resource_id": "2",
+        "resource_name": "Oxygen",
+        "current_level": 50000,
+        "current_consumption_rate": 1000,
+        "historical_consumption_avg": 950
+      },
+      {
+        "resource_id": "3",
+        "resource_name": "Fuel",
+        "current_level": 75000,
+        "current_consumption_rate": 800,
+        "historical_consumption_avg": 780
+      },
+      {
+        "resource_id": "4",
+        "resource_name": "Food Supplies",
+        "current_level": 10000,
+        "current_consumption_rate": 300,
+        "historical_consumption_avg": 280
+      },
+      {
+        "resource_id": "5",
+        "resource_name": "Coolant",
+        "current_level": 15000,
+        "current_consumption_rate": 200,
+        "historical_consumption_avg": 190
+      }
+    ]
+  }
+  

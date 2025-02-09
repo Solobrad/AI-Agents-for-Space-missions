@@ -1,9 +1,11 @@
+import os                      # ADDED: For file path handling
+import json
 from typing import Any, Dict
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from pydantic import Extra
 from crewai_tools import SerperDevTool
-import sqlite3
+
 
 # Define a custom agent class that allows extra fields
 
@@ -16,7 +18,6 @@ class CustomAgent(Agent):
 class DatabaseAgent(CustomAgent):
     db_connection: Any = None
     data: Dict[str, Any] = {}
-    anomalies: list = []
 
     class Config:
         extra = Extra.allow
@@ -34,12 +35,11 @@ class LatestAiDevelopment():
     def database_agent(self) -> Agent:
         agent_instance = DatabaseAgent(
             config=self.agents_config['database_agent'],
-            verbose=True
+            verbose=True,
         )
-        # Establish a database connection
-        conn = sqlite3.connect('space_missions.db')
-        agent_instance.db_connection = conn
-
+        agent_instance.json_file = os.path.join(os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..')), "space_missions.json")
+        print(f"JSON file path: {agent_instance.json_file}")
         return agent_instance
 
     @agent
@@ -76,27 +76,25 @@ class LatestAiDevelopment():
         return report_agent
 
     # Task for database handling: extract and share database data and anomalies.
-
+    @task
     def database_task(self) -> Task:
         def run_database_task(context: Dict[str, Any]) -> str:
-            db_agent_instance = self.database_agent()
-            cursor = db_agent_instance.db_connection.cursor()
-            cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table';")
-            tables = cursor.fetchall()
-            all_data = {}
-            for (table_name,) in tables:
-                cursor.execute(f"SELECT * FROM {table_name};")
-                rows = cursor.fetchall()
-                all_data[table_name] = rows
-            db_agent_instance.data = all_data
-            context["database_data"] = db_agent_instance.data
-            print("Extracted Database Data:", all_data)
-            return "Database data extracted and shared."
-        return Task(
-            config=self.tasks_config['database_task'],
-            run=run_database_task
-        )
+            # Access the pre-initialized agent instance from the crew
+            db_agent = self.database_agent()
+            json_file = db_agent.json_file
+
+            try:
+                with open(json_file, 'r') as f:
+                    data = json.load(f)
+            except Exception as e:
+                return f"Error loading JSON: {str(e)}"
+
+            # Update the agent's data and shared context
+            db_agent.data = data
+            context["database_data"] = data
+            return f"Successfully loaded {len(data)} records."
+
+        return Task(config=self.tasks_config['database_task'], run=run_database_task)
 
     @task
     def research_task(self) -> Task:
@@ -105,7 +103,6 @@ class LatestAiDevelopment():
     @task
     def mission_integration_task(self) -> Task:
         task_config = self.tasks_config['mission_integration_task']
-        print("Mission Integration Task Config:", task_config)  # Debugging
         return Task(config=task_config)
 
     @task
