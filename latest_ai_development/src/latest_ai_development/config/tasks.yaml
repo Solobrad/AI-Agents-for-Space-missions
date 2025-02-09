@@ -1,14 +1,13 @@
 database_task:
   description: >
-    Connect to the space resource database, fetch all relevant data from the 'resources' table—including current resource utilisation and historical mission consumption metrics.
-    Pre-process and structure the data for analysis and downstream tasks.
+    Connect to the space resource database, fetch all relevant data from the 'resources' 
+    table—including current resource utilisation and historical mission consumption metrics.
     Additionally, perform an anomaly check by comparing real‑time data with historical trends to flag any insufficiencies in resource allocation.
   expected_output: >
     A structured dataset (formatted as a list or table) that includes:
       - Current resource levels and consumption rates,
-      - Historical consumption metrics from previous missions,
       - Flags or alerts indicating any detected anomalies or resource insufficiencies.
-    This dataset should be ready for use by other agents for research and resource management.
+    This dataset should be ready for use by other agents for research.
   agent: database_agent
 
 research_task:
@@ -25,7 +24,7 @@ research_task:
 
 mission_integration_task:
   description: >
-    Analyze current mission objectives, operational timelines, and available resource data—including both current 
+    Analyze {topic} for the year {current_year}. objectives, operational timelines, and available resource data—including both current 
     resource levels and historical consumption metrics—to generate a highly accurate prediction of resource consumption for the upcoming mission.
   expected_output: >
     A concise prediction report summarising the expected consumption of key resources (e.g., fuel, power, oxygen) for the upcoming mission.
@@ -48,16 +47,18 @@ reporting_task:
   description: >
     Collate and analyse data from previous tasks—including research findings, real-time resource management outcomes, and detected anomalies—to generate a comprehensive report on space resource management.
     The report should include detailed sections on:
-      - Current resource status and consumption,
+      - All Current resource status and anomalies presented in a tabular format,
       - Anomalies detected in resource usage,
       - Predictive analytics outcomes from mission_integration_strategist,
       - Resource management outcomes from resource_management_specialist.
     Focus on presenting an accurate snapshot of the current operational state without prescribing future actions.
   expected_output: >
-    A fully detailed report formatted in markdown (without using '```') that includes distinct sections covering:
-      - Real-time analysis of current resource data and consumption,
+    A fully detailed report about {topic} for the year {current_year} formatted in markdown (without using '```') that includes distinct sections covering:
+      - Real-time analysis of all current resource data and anomalies presented in a table with these columns 
+      (Resource	Current Level, Consumption Rate,	Anomaly Detected?, Anomaly Description),
       - Analysis and explanation of any detected anomalies,
-      - Results and insights from predictive analytics and resource management actions.
+      - Predictive analytics,
+      - Resource management actions,
       - Key research findings on space resource management,
   agent: reporting_analyst
 

@@ -7,7 +7,7 @@ database_agent:
   backstory: >
     You are an expert in database management with deep knowledge of space mission data.
     Your duty is to fetch, process, and deliver data to support informed decisions.
-    You excel at detecting anomalies in current resource usage by comparing it with historical trends.
+    You excel at detecting anomalies in current resource usage by comparing it with other information.
 
     
 researcher:

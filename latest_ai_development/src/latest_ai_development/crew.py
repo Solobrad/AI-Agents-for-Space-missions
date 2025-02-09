@@ -1,13 +1,22 @@
-from typing import Any
+from typing import Any, Dict
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from pydantic import Extra
 from crewai_tools import SerperDevTool
 import sqlite3
 
+# Define a custom agent class that allows extra fields
 
-class DatabaseAgent(Agent):
+
+class CustomAgent(Agent):
+    class Config:
+        extra = Extra.allow
+
+
+class DatabaseAgent(CustomAgent):
     db_connection: Any = None
+    data: Dict[str, Any] = {}
+    anomalies: list = []
 
     class Config:
         extra = Extra.allow
@@ -17,117 +26,125 @@ class DatabaseAgent(Agent):
 class LatestAiDevelopment():
     """LatestAiDevelopment crew for Space Resource Management"""
 
-    # Configuration files for agents and tasks (ensure these YAML files include keys:
-    # 'researcher', 'reporting_analyst', and 'optimization_specialist' for agents,
-    # and 'research_task', 'reporting_task', and 'optimization_task' for tasks)
+    # Configuration files for agents and tasks
     agents_config = 'config/agents.yaml'
     tasks_config = 'config/tasks.yaml'
 
     @agent
     def database_agent(self) -> Agent:
         agent_instance = DatabaseAgent(
-            # Ensure this entry exists in agents.yaml
             config=self.agents_config['database_agent'],
             verbose=True
         )
         # Establish a database connection
-        agent_instance.db_connection = sqlite3.connect('space_resources.db')
+        conn = sqlite3.connect('space_missions.db')
+        agent_instance.db_connection = conn
+
         return agent_instance
 
-    # Agent for the researcher role
     @agent
     def researcher(self) -> Agent:
-        return Agent(
+        researcher_agent = CustomAgent(
             config=self.agents_config['researcher'],
             verbose=True,
             tools=[SerperDevTool()]
         )
+        return researcher_agent
 
-        # Agent for the Mission Integration Strategist role
     @agent
     def mission_integration_strategist(self) -> Agent:
-        return Agent(
+        mis_agent = CustomAgent(
             config=self.agents_config['mission_integration_strategist'],
             verbose=True
         )
+        return mis_agent
 
-    # Agent for the optimization specialist role
     @agent
-    # Added: optimization_specialist agent
     def resource_management_specialist(self) -> Agent:
-        return Agent(
+        rm_agent = CustomAgent(
             config=self.agents_config['resource_management_specialist'],
             verbose=True
         )
+        return rm_agent
 
-    # Agent for the reporting analyst role
     @agent
     def reporting_analyst(self) -> Agent:
-        return Agent(
+        report_agent = CustomAgent(
             config=self.agents_config['reporting_analyst'],
             verbose=True
         )
+        return report_agent
 
-    # # Agent for the Anomaly & Contingency Manager role
-    # @agent
-    # def anomaly_contingency_manager(self) -> Agent:
-    #     return Agent(
-    #         config=self.agents_config['anomaly_contingency_manager'],
-    #         verbose=True
-    #     )
+    # Task for database handling: extract and share database data and anomalies.
 
-    # Task for conducting research
-    # Task for database handling
-
-    @task
     def database_task(self) -> Task:
+        def run_database_task(context: Dict[str, Any]) -> str:
+            db_agent_instance = self.database_agent()
+            cursor = db_agent_instance.db_connection.cursor()
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+            all_data = {}
+            for (table_name,) in tables:
+                cursor.execute(f"SELECT * FROM {table_name};")
+                rows = cursor.fetchall()
+                all_data[table_name] = rows
+            db_agent_instance.data = all_data
+            context["database_data"] = db_agent_instance.data
+            print("Extracted Database Data:", all_data)
+            return "Database data extracted and shared."
         return Task(
-            # Ensure this entry exists in tasks.yaml
             config=self.tasks_config['database_task'],
+            run=run_database_task
         )
 
     @task
     def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_task'],
-        )
+        return Task(config=self.tasks_config['research_task'])
 
-    # # Task for mission integration strategy
     @task
     def mission_integration_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['mission_integration_task'],
-        )
+        task_config = self.tasks_config['mission_integration_task']
+        print("Mission Integration Task Config:", task_config)  # Debugging
+        return Task(config=task_config)
 
     @task
-    def resource_management_task(self) -> Task:  # Added: optimization task
-        return Task(
-            config=self.tasks_config['resource_management_task'],
-        )
+    def resource_management_task(self) -> Task:
+        return Task(config=self.tasks_config['resource_management_task'])
 
-    # Task for generating the report
+    # Task for reporting: collate all shared outputs into a final report.
     @task
     def reporting_task(self) -> Task:
         return Task(
             config=self.tasks_config['reporting_task'],
-            output_file='report.md'
+            # This is the file that will be contain the final report.
+            output_file='output/report.md'
         )
-
-    # # Task for anomaly and contingency planning
-    # @task
-    # def anomaly_contingency_task(self) -> Task:
-    #     return Task(
-    #         config=self.tasks_config['anomaly_contingency_task'],
-    #     )
 
     @crew
     def crew(self) -> Crew:
-        """Creates the LatestAiDevelopment crew with all agents and tasks"""
+        # Instantiate agents
+        db_agent = self.database_agent()
+        researcher_agent = self.researcher()
+        mis_agent = self.mission_integration_strategist()
+        rm_agent = self.resource_management_specialist()
+        report_agent = self.reporting_analyst()
+
+        # Initialize an empty shared context dictionary.
+        shared_context: Dict[str, Any] = {}
+
+        # Return the Crew with sequential tasks that update the shared context.
         return Crew(
-            agents=self.agents,  # Automatically created by the @agent decorators
-            tasks=self.tasks,    # Automatically created by the @task decorators
+            agents=[db_agent, researcher_agent,
+                    mis_agent, rm_agent, report_agent],
+            tasks=[
+                self.database_task(),
+                self.research_task(),
+                self.mission_integration_task(),
+                self.resource_management_task(),
+                self.reporting_task()
+            ],
+            shared_context=shared_context,
             process=Process.sequential,
             verbose=True,
-            # Alternatively, you can use a hierarchical process:
-            # process=Process.hierarchical,
         )
