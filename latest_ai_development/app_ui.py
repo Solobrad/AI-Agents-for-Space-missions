@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
-from dotenv import load_dotenv  # (Make sure python-dotenv is installed)
-from datetime import datetime
-import streamlit as st  # Import Streamlit for the UI
+
 import os
 import sys
-# Import the pysqlite3 module provided by chromadb-pysqlite3
-__import__('pysqlite3')
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+import streamlit as st  # Import Streamlit for the UI
+from datetime import datetime
+from dotenv import load_dotenv  # (Make sure python-dotenv is installed)
 load_dotenv()
 # Determine the directory of the current file (which is latest_ai_development/)
 current_dir = os.path.dirname(os.path.abspath(__file__))
