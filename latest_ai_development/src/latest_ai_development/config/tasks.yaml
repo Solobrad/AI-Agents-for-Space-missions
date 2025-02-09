@@ -46,19 +46,20 @@ resource_management_task:
 
 reporting_task:
   description: >
-    Collate and analyse data from previous tasks—including research findings and real-time resource management outcomes—to generate a comprehensive report on space resource management.
+    Collate and analyse data from previous tasks—including research findings, real-time resource management outcomes, and detected anomalies—to generate a comprehensive report on space resource management.
     The report should include detailed sections on:
-      - Current resource status and consumption trends,
+      - Current resource status and consumption,
+      - Anomalies detected in resource usage,
       - Predictive analytics outcomes from mission_integration_strategist,
       - Resource management outcomes from resource_management_specialist.
     Focus on presenting an accurate snapshot of the current operational state without prescribing future actions.
   expected_output: >
     A fully detailed report formatted in markdown (without using '```') that includes distinct sections covering:
-      - Key research findings on space resource management,
-      - Real-time analysis of current resource data and consumption trends,
+      - Real-time analysis of current resource data and consumption,
+      - Analysis and explanation of any detected anomalies,
       - Results and insights from predictive analytics and resource management actions.
+      - Key research findings on space resource management,
   agent: reporting_analyst
-
 
 
 
