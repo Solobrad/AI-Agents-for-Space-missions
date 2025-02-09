@@ -1,40 +1,56 @@
 database_task:
   description: >
-    Connect to the space resource database, fetch all relevant data from the 'resources' table, and pre-process the data to make it accessible for analysis.
-    Ensure that the data is structured and formatted to support downstream tasks, such as research and resource management.
+    Connect to the space resource database, fetch all relevant data from the 'resources' table—including current resource utilisation and historical mission consumption metrics.
+    Pre-process and structure the data for analysis and downstream tasks.
+    Additionally, perform an anomaly check by comparing real‑time data with historical trends to flag any insufficiencies in resource allocation.
   expected_output: >
-    A structured dataset containing all resource data from the database, formatted as a list or table, ready for use by other agents.
+    A structured dataset (formatted as a list or table) that includes:
+      - Current resource levels and consumption rates,
+      - Historical consumption metrics from previous missions,
+      - Flags or alerts indicating any detected anomalies or resource insufficiencies.
+    This dataset should be ready for use by other agents for research and resource management.
   agent: database_agent
-  
+
 research_task:
   description: >
-    Conduct thorough research to identify the most suitable machine learning algorithms for space resource management.
-    Focus on selecting algorithms that align with the specific characteristics of the input data, ensuring they can 
-    effectively optimize resource allocation, consumption forecasting, and overall system efficiency.
+    Conduct comprehensive online research to identify possible reasons behind observed resource anomalies and insufficiencies.
+    Analyze both current resource data and historical consumption trends to understand factors contributing to these issues.
+    Gather actionable suggestions and recommendations from reputable sources to support resource management decisions.
   expected_output: >
-    A list of 3 bullet points highlighting the best ML algorithms for space resource management.
-    Each point should include:
-      - The algorithm's name.
-      - A brief explanation of how it works.
-      - Why it is suitable for space resource management based on the input data.
+    A list of 3 bullet points summarising the key research findings, where each bullet includes:
+      - A concise explanation of potential causes behind the resource anomalies.
+      - Practical suggestions or remedial actions recommended by experts or relevant sources.
+      - Additional insights to support informed decision-making in space resource management.
   agent: researcher
+
+mission_integration_task:
+  description: >
+    Analyze current mission objectives, operational timelines, and available resource data—including both current 
+    resource levels and historical consumption metrics—to generate a highly accurate prediction of resource consumption for the upcoming mission.
+  expected_output: >
+    A concise prediction report summarising the expected consumption of key resources (e.g., fuel, power, oxygen) for the upcoming mission.
+  agent: mission_integration_strategist
 
 resource_management_task:
   description: >
-    Analyze real-time and historical resource data to develop and apply advanced, self-optimising, and predictive strategies for resource management.
-    This task will forecast future resource consumption (e.g., power, fuel, oxygen) and directly adjust resource allocation to meet upcoming mission demands.
+    Based on the anomaly reports and resource consumption predictions provided by other agents,
+    develop a high-level resource allocation strategy for upcoming missions.
+    Your task is to integrate these insights to decide on optimal adjustments for distributing critical assets (e.g., fuel, power, oxygen)
+    without re-analyzing the raw data.
   expected_output: >
-    A comprehensive set of predictive models, decision rules, and actionable resource adjustments, formatted as bullet points.
-    The output should include evidence of the agent autonomously fetching data, predicting future consumption, and managing resource distribution in real time.
+    A concise set of bullet points outlining:
+      - Recommended adjustments for resource allocation,
+      - Identification of any insufficiencies and suggested remedial actions,
+      - A high-level strategy ensuring that resource distribution aligns with mission-critical objectives.
   agent: resource_management_specialist
 
 reporting_task:
   description: >
-    Collate and analyze data from previous tasks—including research findings and real-time resource management outcomes—to generate a comprehensive report on space resource management.
+    Collate and analyse data from previous tasks—including research findings and real-time resource management outcomes—to generate a comprehensive report on space resource management.
     The report should include detailed sections on:
       - Current resource status and consumption trends,
-      - Predictive analytics outcomes from resource management,
-      - Challenges and observed trends during resource management.
+      - Predictive analytics outcomes from mission_integration_strategist,
+      - Resource management outcomes from resource_management_specialist.
     Focus on presenting an accurate snapshot of the current operational state without prescribing future actions.
   expected_output: >
     A fully detailed report formatted in markdown (without using '```') that includes distinct sections covering:
@@ -44,14 +60,8 @@ reporting_task:
   agent: reporting_analyst
 
 
-# mission_integration_task:
-#   description: >
-#     Analyze current mission objectives and operational timelines to determine how resource allocation (fuel, power, oxygen, etc) 
-#     should be dynamically adjusted to support evolving mission plans.
-#     Provide a summary of integration strategies that ensure alignment between mission goals and resource management.
-#   expected_output: >
-#     A detailed summary with recommendations and strategies for aligning resource allocation with mission-critical objectives, formatted as bullet points.
-#   agent: mission_integration_strategist
+
+
 
 # anomaly_contingency_task:
 #   description: >

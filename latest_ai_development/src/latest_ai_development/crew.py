@@ -2,6 +2,7 @@ from typing import Any
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from pydantic import Extra
+from crewai_tools import SerperDevTool
 import sqlite3
 
 
@@ -38,6 +39,15 @@ class LatestAiDevelopment():
     def researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['researcher'],
+            verbose=True,
+            tools=[SerperDevTool()]
+        )
+
+        # Agent for the Mission Integration Strategist role
+    @agent
+    def mission_integration_strategist(self) -> Agent:
+        return Agent(
+            config=self.agents_config['mission_integration_strategist'],
             verbose=True
         )
 
@@ -58,14 +68,6 @@ class LatestAiDevelopment():
             verbose=True
         )
 
-    # Agent for the Mission Integration Strategist role
-    # @agent
-    # def mission_integration_strategist(self) -> Agent:
-    #     return Agent(
-    #         config=self.agents_config['mission_integration_strategist'],
-    #         verbose=True
-    #     )
-
     # # Agent for the Anomaly & Contingency Manager role
     # @agent
     # def anomaly_contingency_manager(self) -> Agent:
@@ -76,6 +78,7 @@ class LatestAiDevelopment():
 
     # Task for conducting research
     # Task for database handling
+
     @task
     def database_task(self) -> Task:
         return Task(
@@ -89,7 +92,12 @@ class LatestAiDevelopment():
             config=self.tasks_config['research_task'],
         )
 
-    # New task for optimization analysis
+    # # Task for mission integration strategy
+    @task
+    def mission_integration_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['mission_integration_task'],
+        )
 
     @task
     def resource_management_task(self) -> Task:  # Added: optimization task
@@ -104,13 +112,6 @@ class LatestAiDevelopment():
             config=self.tasks_config['reporting_task'],
             output_file='report.md'
         )
-
-    # # Task for mission integration strategy
-    # @task
-    # def mission_integration_task(self) -> Task:
-    #     return Task(
-    #         config=self.tasks_config['mission_integration_task'],
-    #     )
 
     # # Task for anomaly and contingency planning
     # @task
